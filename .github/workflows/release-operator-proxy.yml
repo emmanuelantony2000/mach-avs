@@ -1,7 +1,7 @@
 name: Release Operator Proxy
 on:
-  push:
-    tags: ["*"]
+  # push:
+  #   tags: ["*"]
   workflow_dispatch:
   # pull_request: # for testing only
 concurrency:
@@ -67,11 +67,10 @@ jobs:
           echo "GIT_BRANCH=$GIT_BRANCH" | tee -a $GITHUB_ENV
           echo "REF_NAME=$(echo ${GIT_TAG:-$GITHUB_REF_NAME} | sed 's/[^a-zA-Z0-9._]/-/g')" | tee -a $GITHUB_ENV
       - run: cat $HOME/.gitconfig && cat $XDG_CONFIG_HOME/git/credentials
-
       - name: Set up Golang
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21.1' # The Go version to download (if necessary) and use.
+          go-version: "1.21.1" # The Go version to download (if necessary) and use.
       - run: go version
       - run: go mod download && go mod tidy && go mod verify
       - run: go build -o ./bin/mach-operator-proxy ./generic-operator-proxy/cmd
@@ -111,7 +110,5 @@ jobs:
             git_config=${{ env.HOME }}/.gitconfig
             git_credentials=${{ env.XDG_CONFIG_HOME }}/git/credentials
           file: ./ops/proxy.Dockerfile
-          labels:  ${{ steps.operator-meta.outputs.labels }}
+          labels: ${{ steps.operator-meta.outputs.labels }}
           tags: ${{ steps.operator-meta.outputs.tags }}
-
-

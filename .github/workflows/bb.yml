@@ -1,0 +1,40 @@
+name: BB
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Foundry project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Show Forge version
+        run: |
+          forge --version
+
+      - name: Run BB Action CI
+        uses: BuildBearLabs/buildbear_x_action@v1.3.0
+        with:
+          network: |
+            [
+              {
+                "chainId": 1
+              }
+            ]
+          deploy-command: "./script.sh"
+          buildbear-token: "${{ secrets.BUILDBEAR_TOKEN }}"

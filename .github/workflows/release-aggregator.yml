@@ -1,7 +1,7 @@
 name: Release Aggregator
 on:
-  push:
-    tags: ["*"]
+  # push:
+  #   tags: ["*"]
   workflow_dispatch:
   # pull_request: # for testing only
 concurrency:
@@ -67,7 +67,6 @@ jobs:
           echo "GIT_BRANCH=$GIT_BRANCH" | tee -a $GITHUB_ENV
           echo "REF_NAME=$(echo ${GIT_TAG:-$GITHUB_REF_NAME} | sed 's/[^a-zA-Z0-9._]/-/g')" | tee -a $GITHUB_ENV
       - run: cat $HOME/.gitconfig && cat $XDG_CONFIG_HOME/git/credentials
-
       - name: Extract aggregator metadata (tags, labels) for Docker
         id: aggregator-meta
         uses: docker/metadata-action@v5
@@ -104,7 +103,5 @@ jobs:
             git_config=${{ env.HOME }}/.gitconfig
             git_credentials=${{ env.XDG_CONFIG_HOME }}/git/credentials
           file: ./ops/aggregator.Dockerfile
-          labels:  ${{ steps.aggregator-meta.outputs.labels }}
+          labels: ${{ steps.aggregator-meta.outputs.labels }}
           tags: ${{ steps.aggregator-meta.outputs.tags }}
-
-

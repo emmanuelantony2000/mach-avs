@@ -1,8 +1,8 @@
 name: test
 
 on:
-  push:
-    branches: [master, m2-dev]
+  # push:
+  #   branches: [master, m2-dev]
   pull_request:
     branches: [master, m2-dev]
 
